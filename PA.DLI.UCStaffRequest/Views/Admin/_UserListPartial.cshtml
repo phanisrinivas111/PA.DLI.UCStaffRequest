@@ -1,0 +1,14 @@
+﻿
+@model IEnumerable<PA.DLI.UCStaffRequest.Models.User>
+
+
+@foreach (var user in Model)
+{
+    <tr>
+        <td>@user.UserId</td>
+        <td>@user.RoleCode</td>
+        <td style="text-align:center">
+            <a href="#" data-toggle="modal" data-user-id="@user.UserId"><b><i aria-hidden="true" style="padding:5px" class="fa fa-trash"></i>Delete</b></a>
+        </td>
+    </tr>
+}

@@ -1,0 +1,16 @@
+﻿
+@model IEnumerable<PA.DLI.UCStaffRequest.Models.Category>
+
+@foreach (var category in Model)
+{
+<tr>
+    <td>@category.CategoryName</td>
+    <td>@category.Email</td>
+    <td style="text-align:center">
+        <a href="#"
+           data-toggle="modal" 
+           data-category-name="@category.CategoryName"
+           data-category-email="@category.Email" ><b><i  style="padding: 3px" class="fa fa-edit"></i>Edit</b></a>
+    </td>
+</tr>
+}

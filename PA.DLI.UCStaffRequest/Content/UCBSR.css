@@ -1,0 +1,120 @@
+﻿
+.pagination .current{
+    padding-top:10px;
+     padding-bottom:10px;
+}
+h4{
+    color:#18406E;
+}
+h5{
+    color:#18406E;
+}
+footer {
+  position: relative;
+}
+.body-content {
+   
+    width: 100%;
+    min-height:40vh;
+  
+}
+.card {
+    position: relative;
+    max-width: none;
+    padding: 0px;
+}
+.btn-block{
+        display: block;
+    width: 100%;
+}
+.base-box {
+    background-color: #fff;
+    border-radius: 3px;
+    width: 100%;
+    
+    min-height:80vh;
+    box-shadow: 0px 0px 3px #999;
+    -moz-box-shadow: 0 0 3px #999;
+    -webkit-box-shadow: 0 0 3px white;
+}
+
+@media (max-width: 768px) {
+ .button {
+        max-width: none;
+    }
+} 
+div.ui-datepicker{
+    width:18em;
+}
+.datepicker .datepicker-switch{
+    width:300px;
+}
+.card-footer {
+    padding: 0.75rem 1.25rem;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+    .card-footer:last-child {
+        border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+    }
+/* Container for the cards */
+.card-container-uc {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping of cards on smaller screens */
+    gap: 1.5rem; /* Adjust this value to control space between cards */
+    justify-content: space-between; /* Distributes space evenly between cards */
+}
+
+/* Individual card styling */
+.card-uc {
+    box-shadow: 8px 9px 10px rgb(0 0 0 / 30%);
+    background: #FFF none repeat scroll 0% 0%;
+    border-color: #18406E;
+    flex: 1 1 calc(33.333% - 1.5rem); /* 3 cards in a row with gap */
+    margin: 0; /* Ensure no additional margin */
+    color: black;
+}
+
+.card-body-uc {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+}
+
+.text-primary-uc {
+    color: #007bff !important;
+}
+.modal-backdrop-uc{
+    transition: opacity 0.15s ease-in-out;
+    background-color:rgba(0,0,0,0.6);
+}
+/*.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+    .pagination a, .pagination span {
+        display: inline-block;
+        padding: 10px 15px;
+        text-decoration: none;*/
+/*border: 1px solid #ccc;*/
+/*border-radius: 3px;*/
+/*color: #333;
+        font-size: 14px;
+    }
+
+        .pagination a:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+            border-color:blue;
+        }*/
+.pagination .current-page {
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+}

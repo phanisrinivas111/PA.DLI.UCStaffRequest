@@ -1,0 +1,282 @@
+﻿
+@model IEnumerable<PA.DLI.UCStaffRequest.Models.Category>
+@{
+    ViewBag.Title = "Categories";
+}
+
+
+<body>
+    <h4 style="color:#18406E;"><b>Categories</b></h4>
+    <br />
+    <div class="callout success d-none" id="successMessage" data-closable role="alert">
+        <h3><strong>SUCCESS!</strong></h3>
+        <h3 id="successDetails"></h3>
+        <p></p>
+    </div>
+    <div class="table-responsive">
+        <table class="hover">
+            <thead>
+                <tr>
+                    <th style="width:50%;text-align:center">Category</th>
+                    <th style="width:35%;text-align:center">Email</th>
+                    <th style="width:15%;text-align:center"></th>
+                </tr>
+            </thead>
+            <tbody id="CategoriesTable">
+                @Html.Partial("_CategoriesListPartial", Model)
+            </tbody>
+        </table>
+    </div>
+    <!--Add New Button-->
+
+    <a href="#" data-toggle="modal" data-target="#customModal" id="openCustomModal"><b><i class="fa fa-plus-circle"></i> Add Category</b></a>
+
+    <!--Add Category -->
+    <div class="modal modal-backdrop-uc" data-keyboard="false" data-backdrop="static" id="customModal" name="categoryModal" tabindex="-1">
+        <div class="modal-dialog" style="max-width:90%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addUserModalLabel">Add Category</h4>
+                    <button type="button" id="custommodalclose" class="close pull-right" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="editErrorMessage" class="callout alert d-none" role="alert">
+                    <b>Please correct following error(s) to proceed</b>
+                    <ul style="list-style-position:inside" id="editerrorList">
+                        <il>
+                        </il>
+                    </ul>
+
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div id="categoryForm">
+                        <div class="form-group" style="margin:0px">
+                            <label class="col-form-label" style="font-weight:bold" for="Category1">Category</label>
+                            <input type="text" id="categoryName" class="form-control" style="max-width:100%" maxlength="100" name="Category1" required />
+                        </div>
+                        <div class="form-group" style="margin:0px">
+                            <label class="col-form-label" style="font-weight:bold" for="email1">Email</label>
+                            <input type="text" id="Email" class="form-control" style="max-width:100%" maxlength="200" name="email1" required />
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer justify-content-between">
+                    <button id="cancleButton" type="button" style="background-color:#18406E" class="btn btn-primary mr-auto pull-left" data-dismiss="modal">Cancel</button>
+                    <button id="addCategoryButton" type="button" style="background-color:#18406E" class="btn btn-primary pull-right">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Edit Category -->
+    <div class="modal modal-backdrop-uc" id="editCategoryModal" data-keyboard="false" data-backdrop="static" name="editCategory" tabindex="-1">
+        <div class="modal-dialog" style="max-width:90%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Category</h4>
+                    <button id="closeEditModal" type="button" aria-hidden="true" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="editErrorMessage" class="callout alert d-none" role="alert">
+                    <b>Please correct following error(s) to proceed</b>
+                    <ul style="list-style-position:inside" id="editerrorList">
+                        <il>
+                        </il>
+                    </ul>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div id="editCategoryForm" name="editBIForm" novalidate>
+                        <div class="form-group" style="margin:0px">
+                            <label for="editCategoryName" class="col-form-label" style="font-weight:bold">Category</label>
+                            <input id="editCategoryName" class="form-control" style="max-width:100%" maxlength="50" name="categoryName" type="text" readonly />
+                        </div>
+                        <div class="form-group" style="margin:0px">
+                            <label for="editEmail" class="col-form-label" style="font-weight:bold">Email</label>
+                            <input class="form-control" style="max-width:100%" maxlength="200" name="editEmail" type="text" id="editEmail" required />
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer justify-content-between">
+                    <button id="cancelEdit" type="button" style="background-color:#18406E" class="btn btn-primary mr-auto" data-dismiss="modal"> Cancel</button>
+                    <button id="updateCategoryButton" type="button" style="background-color:#18406E" class="btn btn-primary pull-right">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Function to display the success message after reload
+            function displaySuccessMessage() {
+                const successMessage = localStorage.getItem('successMessage');
+                if (successMessage) {
+                    $('#successDetails').text(successMessage);
+                    $('#successMessage')
+                        .removeClass('d-none')
+                        .hide()
+                        .fadeIn(500);
+
+                    setTimeout(function () {
+                        $('#successMessage').fadeOut(500, function () {
+                            localStorage.removeItem('successMessage'); // Clear the message
+                        });
+                    }, 3000);
+                }
+            }
+
+            displaySuccessMessage();
+            // Function to fetch and refresh the user list
+
+            function resetModel() {
+                $("#categoryForm").find("input,select,textarea").val("");
+                $('#customModal').fadeOut();
+                $('#customModal #editErrorMessage').addClass('d-none');
+                $('customModal #editerrorList').empty();
+            }
+
+            $('#openCustomModal').click(function () {
+
+                $('#customModal').fadeIn();
+            });
+            $('#cancleButton, #custommodalclose').click(function () {
+                resetModel();
+            });
+            // Handle Add Category Button Click
+            $('#addCategoryButton').off('click').on('click', function () {
+
+                // Clear previous error messages
+                const errorMessageDiv = $('#customModal #editErrorMessage');
+                const errorList = $('#customModal #editerrorList');
+                errorList.empty();
+                errorMessageDiv.addClass('d-none');
+
+                var categoryName = $('#categoryName').val().trim();
+                var Email = $('#Email').val().trim();
+
+                const errors = [];
+
+                $.ajax({
+
+                    url: '/Admin/AddCategory', // Adjust to match your controller action
+                    type: 'POST',
+                    data: { categoryName: categoryName, Email: Email },
+                    success: function (response) {
+                        if (response.success) {
+                            resetModel();
+                            // Display success message
+                            localStorage.setItem('successMessage', `Category ${categoryName} added sucessfully`)
+                            location.reload();
+                            // Close the modal
+                            $('#customModal').fadeOut();
+                        } else {
+                            if (response.message) {
+                                // Display error message for unsuccessful addition
+                                errorList.empty();
+                                if (response.message && response.message.length > 0) {
+                                    response.message.forEach((m, index) => {
+                                        errorList.append(`<li id="m-${index}">${m}</li>`);
+                                    });
+                                }
+                                errorMessageDiv.removeClass('d-none');
+                            }
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Error adding category: ' + error);
+                    }
+                });
+            });
+
+
+
+            let currentCategoryname = null; // To store the category ID for updates
+
+            // Open the Edit Modal and populate data
+            $('#CategoriesTable').on('click', 'a[data-toggle="modal"]', function () {
+
+                // Retrieve category data from the row
+                const categoryName = $(this).data('category-name');
+                const Email = $(this).data('category-email');
+
+
+                currentCategoryname = categoryName; // Store the category ID for updating later
+
+                // Populate the fields in the modal
+                $('#editCategoryName').val(categoryName); // Non-editable field
+                $('#editEmail').val(Email); // Editable field
+
+                // Show the modal
+                $('#editCategoryModal').fadeIn();
+            });
+
+            // Close the Edit Modal
+            $('#cancelEdit, #closeEditModal').click(function () {
+                $('#editCategoryModal').fadeOut();
+                $(' #editCategoryModal #editErrorMessage').addClass('d-none'); // Hide error message
+            });
+
+            // Update Category
+            $('#updateCategoryButton').off('click').on('click', function () {
+
+                // Clear previous error messages
+                const errorMessageDiv = $('#editCategoryModal #editErrorMessage');
+                const errorList = $('#editCategoryModal #editerrorList');
+                errorList.empty();
+                errorMessageDiv.addClass('d-none');
+
+                const updatedEmail = $('#editEmail').val().trim();
+
+
+                // Send AJAX request to update the category
+                $.ajax({
+                    url: '/Admin/EditCategory', // Replace with your backend endpoint
+                    type: 'POST',
+                    data: {
+                        categoryName: currentCategoryname,
+                        Email: updatedEmail
+                    },
+                    success: function (response) {
+                        const isSuccess = response.sucess === true || response.success === "true";
+                        if (isSuccess) {
+
+                            localStorage.setItem('successMessage', `Category ${currentCategoryname} updated sucessfully`)
+                            location.reload();
+
+                            // Close the modal
+                            $('#editCategoryModal').fadeOut();
+
+                        } else {
+                            if (response.message) {
+
+                                // Display error message for unsuccessful addition
+                                errorList.empty();
+                                if (response.message && response.message.length > 0) {
+                                    response.message.forEach((m, index) => {
+                                        errorList.append(`<li id="m-${index}">${m}</li>`);
+                                    });
+                                }
+                                errorMessageDiv.removeClass('d-none');
+                            }
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Show error message in the modal
+                        $('#editErrorMessage')
+                            .text('An error occurred while updating the category. Please try again.')
+                            .removeClass('d-none');
+                    }
+                });
+            });
+        });
+    </script>
+}

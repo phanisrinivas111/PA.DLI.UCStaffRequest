@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Admin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+        /* Container for the cards */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping of cards on smaller screens */
+            gap: 1.5rem; /* Adjust this value to control space between cards */
+            justify-content: space-between; /* Distributes space evenly between cards */
+        }
+
+        /* Individual card styling */
+        .card {
+            box-shadow: 8px 9px 10px rgb(0 0 0 / 30%);
+            background: #FFF none repeat scroll 0% 0%;
+            border-color: #18406E;
+            flex: 1 1 calc(33.333% - 1.5rem); /* 3 cards in a row with gap */
+            margin: 0; /* Ensure no additional margin */
+        }
+
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            min-height: 1px;
+            padding: 1.25rem;
+        }
+
+        .text-primary {
+            color: #007bff !important;
+        }
+    </style>
+    @{
+        var url1 = Url.Action("Categories", "Admin");
+        var url2 = Url.Action("UserManagement", "Admin");
+    }
+</head>
+<body>
+    <br />
+    <h4 style="color:#18406E;"><b>Admin</b></h4><br />
+    <div class="card-container">
+        <a href="@url2" class="card">
+            <div class="card-body" style="text-align:center;font-weight:600">
+                User Management
+            </div>
+        </a>
+        <a href="@url1" class="card">
+            <div class="card-body" style="text-align: center; font-weight: 600">
+                Categories
+            </div>
+        </a>
+        @*<div class="card">
+                <div class="card-body">
+                    text 3
+                </div>
+            </div>*@
+    </div>
+</body>
+</html>

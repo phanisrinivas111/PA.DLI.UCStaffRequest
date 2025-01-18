@@ -1,0 +1,337 @@
+﻿
+@model IEnumerable<PA.DLI.UCStaffRequest.Models.User>
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body class="body">
+    <h4 style="color:#18406E;"><b>User Management</b></h4>
+    <br />
+
+    <div class="callout success d-none" id="successMessage" data-closable role="alert">
+        <h3><strong>SUCCESS!</strong></h3>
+        <h3 id="successDetails"></h3>
+        <p></p>
+    </div>
+    <div class="callout success d-none" id="errorMessage" data-closable role="alert">
+        <h3><strong>SUCCESS!</strong></h3>
+        <h3>User {{userIDIAD}} deleted successfully!!</h3>
+        <p></p>
+    </div>
+    <form method="get" action="@Url.Action("UserManagement", "Admin")">
+        <div class="form-group" style="margin:0px">
+            <div class="input-group">
+
+                <input type="text" class="form-control col-lg-4 col-md-6 col-sm-12" name="search" value="@ViewBag.SearchQuery" placeholder="CWOPA ID" maxlength="20">
+                <div class="input-group-button">
+                    <button type="submit" style="height:60px; width:60px;display: flex; justify-content: center; align-items: center;padding: 20px 10px;cursor: pointer;margin-bottom: 18px;" class="btn button -primary btn-block">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+
+                <a href="@Url.Action("UserManagement", "Admin")" style="padding-bottom: 0px; font-weight: 500; background-color: #ffffff; color: #18406E;display:inline-block;align-self:flex-end;margin-left: 10px;margin-bottom: 18px;" class="label">Clear Search</a>
+
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="hover">
+            <thead>
+                <tr>
+                    <th>CWOPA ID</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyid">
+                @if (Model != null && Model.Any())
+                {
+                    @Html.Partial("_UserListPartial", Model);
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center">No Record(s) Found</td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="row justify-content-center" style="height:55px">
+        <div aria-label="pagination">
+            <div class="pagination text-center" style="height:45px;">
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <a href="@Url.Action("UserManagement", "Admin", new { page = ViewBag.CurrentPage - 1 })" class="button -pagination" style="height:45px;">Prev</a>}
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    if (i == ViewBag.CurrentPage)
+                    {
+                        <span class="current">@i</span> }
+                    else
+                    {
+                        <a href="@Url.Action("UserManagement", "Admin", new { page = i })">@i</a>}
+                }
+                @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                {
+                    <a href="@Url.Action("UserManagement", "Admin", new { page = ViewBag.CurrentPage + 1 })" class="button -pagination" style="height:45px;">Next</a>}
+            </div>
+        </div>
+    </div>
+    <!--Add user Button-->
+
+    <a href="#" data-toggle="modal fade" data-target="#customModal" id="openCustomModal"><b><i class="fa fa-plus-circle"></i> Add User</b></a>
+
+    <!-- Add User Modal -->
+    <div class="modal modal-backdrop-uc" data-keyboard="false" data-backdrop="static" id="customModal" name="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class=" modal-header">
+                    <h4 class="modal-title" id="addUserModalLabel">Add User</h4>
+                    <button id="custommodalclose" type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+                </div>
+                <div id="adduserErrorMessage" class="callout alert d-none" role="alert">
+                    <b>Please correct following error(s) to proceed</b>
+                    <ul style="list-style-position:inside" id="errorList">
+                        <il>
+                        </il>
+                    </ul>
+
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+
+                    <div id="addUserForm">
+                        <!-- CWOPA ID Input -->
+                        <div class="form-group" style="margin:0px">
+
+                            <label class="col-form-label" style="font-weight:bold" for="CWOPAId">CWOPA ID</label>
+
+                            <input class="form-control" style="max-width:100%" maxlength="20" type="text" id="CWOPAId" name="CWOPAId" placeholder="Enter CWOPA ID" autocomplete="off" required />
+
+                        </div>
+
+                        <!-- Role Dropdown -->
+                        <fieldset class="form-group" style="margin:0px; ">
+                            <label for="Role" style="padding:7.75px 0px">Role</label>
+                            <select id="Role" style="max-width:100%" name="roleName" required>
+                                <option value="" disabled selected>Select</option>
+                            </select>
+                        </fieldset>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer d-flex justify-content-between">
+                    <button id="cancleButton" type="button" style="background-color:#18406E" class="btn btn-primary mr-auto pull-left" data-dismiss="modal">Cancel</button>
+                    <button id="addUserButton" type="button" style="background-color:#18406E" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Delete User Modal-->
+    <div class="modal modal-backdrop-uc" data-keyboard="false" data-backdrop="static" id="deleteUserModal" name="deleteIADUser" tabindex="-1">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addUserModalLabel">Delete User</h4>
+                    <button type="button" id="custommodalclose" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Modal Body -->
+                    <div class="form-group" style="margin:0px" id="deleteMessage">
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" id="cancleDelete" style="background-color:#18406E" class="btn btn-primary mr-auto" data-dismiss="modal">No</button>
+                    <button type="button" id="confirmDelete" style="background-color:#18406E" class=" btn btn-primary pull-right">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+
+            // Function to display the success message after reload
+            function displaySuccessMessage() {
+                const successMessage = localStorage.getItem('successMessage');
+                if (successMessage) {
+                    $('#successDetails').text(successMessage);
+                    $('#successMessage')
+                        .removeClass('d-none')
+                        .hide()
+                        .fadeIn(500);
+
+                    setTimeout(function () {
+                        $('#successMessage').fadeOut(500, function () {
+                            localStorage.removeItem('successMessage'); // Clear the message
+                        });
+                    }, 3000);
+                }
+            }
+
+            // Call the function to display the success message on page load
+            displaySuccessMessage();
+
+            function resetModel() {
+                $("#addUserForm").find("input,select,textarea").val("");
+                $("#Role").val("");
+                $('#customModal').fadeOut();
+                $("#adduserErrorMessage").addClass('d-none');
+                $("#errorList").empty();
+            }
+            // Fetch roles and populate dropdown
+            $.ajax({
+                url: '/Admin/GetRoles', // Endpoint to get roles
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        //console.log('roles when sucess-------------', response.data);
+                        // Empty the existing dropdown options
+                        var roleDropdown = $('#Role');
+                        roleDropdown.empty();
+                        // Add the default "Select" option
+                        roleDropdown.append('<option value="" disabled selected>Select</option>');
+                        // Populate the dropdown with the roles from the server
+                        response.data.forEach(function (role) {
+                            roleDropdown.append(
+                                $('<option></option>')
+                                    .val(role.value)
+                                    .text(role.text)
+                            );
+                        });
+                    } else {
+                        console.error('Error fetching roles:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.message);
+                    console.log("error in roles", error.message);
+                    console.error('Error:', error);
+                    alert('Failed to fetch roles');
+                }
+            });
+
+
+            $('#openCustomModal').click(function () {
+
+                $('#customModal').fadeIn();
+            });
+
+            $('#cancleButton, #custommodalclose').click(function () {
+                resetModel();
+
+            });
+            
+            // Handle Add User Button Click
+            $('#addUserButton').on('click', function () {
+                // Validate form inputs
+                const cwopaId = $('#CWOPAId').val().trim();
+                const role = $('#Role').val();
+
+                // Clear previous error messages
+                const errorMessageDiv = $('#adduserErrorMessage');
+                const errorList = $('#errorList');
+
+                errorList.empty();
+                errorMessageDiv.addClass('d-none'); // Hide the error div initially
+                const errors = [];
+
+
+                // Send AJAX request to add the user
+                $.ajax({
+                    url: '/Admin/AddUser', // Adjust to match your controller action
+                    type: 'POST',
+                    data: { CWOPAId: cwopaId, Role: role },
+                    success: function (response) {
+                        if (response.success) {
+
+                            localStorage.setItem('successMessage', `User ${cwopaId} added sucessfully`)
+                            location.reload();
+                            // Close the modal
+                            $('#customModal').fadeOut();
+                            resetModel();
+
+
+                        } else {
+                            // Display error message for unsuccessful addition
+                            errorList.empty();
+                            if (response.message && response.message.length > 0) {
+                                response.message.forEach((m, index) => {
+                                    $('#errorList').append(`<li id="m-${index}">${m}</li>`);
+                                });
+                            }
+                            errorMessageDiv.removeClass('d-none');
+
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Error adding user: ' + error);
+                    }
+                });
+            });
+            let userIdToDelete = null;
+
+            // Open Delete Modal
+            $('#tbodyid').on('click', 'a[data-user-id]', function () {
+                userIdToDelete = $(this).attr('data-user-id'); // Get user ID from the button
+
+                // Update the confirmation message
+                $('#deleteMessage').text(`Are you sure you want to delete User  ${userIdToDelete} ?`);
+
+                // Show the delete modal
+                $('#deleteUserModal').fadeIn();
+            });
+            // Close Modal when clicking No button
+            $('#cancleDelete, #custommodalclose').click(function () {
+                $('#deleteUserModal').fadeOut(); // Close the modal
+            });
+            // Confirm Delete
+            $('#confirmDelete').click(function () {
+                console.log("user id ", userIdToDelete);
+                if (userIdToDelete) {
+                    $.ajax({
+                        url: '/Admin/DeleteUser',
+                        type: 'POST',
+                        data: { cwopaId: userIdToDelete },
+                        success: function (response) {
+                            if (response.success) {
+                                // Display success message
+
+                                localStorage.setItem('successMessage', `User ${userIdToDelete} deleted sucessfully`)
+                                location.reload();
+                                
+                            } else {
+                                alert(response.message || 'Failed to delete the user.');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                            alert('An error occurred while trying to delete the user.');
+                        }
+                    });
+
+                    // Hide the modal
+                    $('#deleteUserModal').fadeOut();
+                }
+            });
+        });
+
+
+    </script>
+}
+

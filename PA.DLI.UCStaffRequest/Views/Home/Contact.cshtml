@@ -1,0 +1,94 @@
+﻿@using System.Configuration
+@{
+    ViewBag.Title = "Admin";
+}
+<html>
+<head>
+
+</head>
+<body>
+    <div class="form-group" style="margin:0px">
+        <div class="input-group">
+            <input type="text" class="form-control col-lg-4 col-md-6 col-sm-12" placeholder="User ID" name="TXT_USER_ID" id="TXT_USER_ID" maxlength="20" ng-model="USER_ID" my-enter="searchUser(1,'IAD')">
+            <div class="input-group-button"><button type="button" style="min-height:60px; width:55px" value="userId_Search" id="userId_Search" name="userId_Search" class="btn button -primary btn-block" ng-click="searchUser(1,'IAD')"><i class="fa fa-search"></i></button></div>
+            <a href="#!" class="label" style="padding-bottom:0px;font-weight:500;background-color:#ffffff; color:#18406E;display:inline-block;align-self:flex-end" ng-click="resetvalidations();SearchPage(1,'IAD')">
+                Clear Search
+            </a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="hover" id="tblUCFCM">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Role</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>Admin</td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i style="padding:5px" aria-hidden="true" class="fa fa-edit"></i>Edit</b></a>
+                    </td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i aria-hidden="true" style="padding:5px" class="fa fa-trash"></i>Delete</b></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>morgan white</td>
+                    <td>Admin</td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i style="padding:5px" aria-hidden="true" class="fa fa-edit"></i>Edit</b></a>
+                    </td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i aria-hidden="true" style="padding:5px" class="fa fa-trash"></i>Delete</b></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>jonathan nolan</td>
+                    <td>Admin</td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i style="padding:5px" aria-hidden="true" class="fa fa-edit"></i>Edit</b></a>
+                    </td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i aria-hidden="true" style="padding:5px" class="fa fa-trash"></i>Delete</b></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Kimber nolan</td>
+                    <td>Admin</td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i style="padding:5px" aria-hidden="true" class="fa fa-edit"></i>Edit</b></a>
+                    </td>
+                    <td style="text-align:center">
+                        <a href="#"><b><i aria-hidden="true" style="padding:5px" class="fa fa-trash"></i>Delete</b></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row justify-content-center" style="height:55px">
+        <nav aria-label="Pagination">
+            <div>
+                <ul class="pagination text-center">
+                    <li class="pagination-previous">
+                        <a href="#!" class="button -pagination">Prev</a>
+                    </li>
+                    <li>
+                        <a href="#!">1</a>
+                    </li>
+                    <li>
+                        <a href="#!">2</a>
+                    </li>
+                    <li class="pagination-next">
+                        <a href="#!" class="button -pagination" ng-click="searchUser(getUserIdDetails.Pager.CurrentPage+1, 'IAD')">Next</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

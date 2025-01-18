@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35122.118
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA.DLI.UCStaffRequest", "PA.DLI.UCStaffRequest\PA.DLI.UCStaffRequest.csproj", "{22CCEE16-CE0C-4F46-91FD-97C69F749CA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA.DLI.UCStaffRequest.DataAccess", "PA.DLI.UCStaffRequest.DataAccess\PA.DLI.UCStaffRequest.DataAccess.csproj", "{679FA20F-3C50-4196-93DE-D8E6988A0024}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22CCEE16-CE0C-4F46-91FD-97C69F749CA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CCEE16-CE0C-4F46-91FD-97C69F749CA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CCEE16-CE0C-4F46-91FD-97C69F749CA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CCEE16-CE0C-4F46-91FD-97C69F749CA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{679FA20F-3C50-4196-93DE-D8E6988A0024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{679FA20F-3C50-4196-93DE-D8E6988A0024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{679FA20F-3C50-4196-93DE-D8E6988A0024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{679FA20F-3C50-4196-93DE-D8E6988A0024}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F60EDBF0-3DB3-48CB-8826-1A0EF1DE9F68}
+	EndGlobalSection
+EndGlobal

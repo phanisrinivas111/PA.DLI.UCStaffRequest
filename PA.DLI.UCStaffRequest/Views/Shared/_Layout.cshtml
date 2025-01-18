@@ -1,0 +1,306 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN' crossorigin = 'anonymous' ></script>", "~/bundles/popper")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-6UWmIRFbACSZBgMY9RILumHEhc2zBlJdhq+qQS4+jT3Fq/ed3oPq3PPz2y1YEgPk' crossorigin = 'anonymous' ></script>", "~/bundles/modernizr")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT' crossorigin = 'anonymous' ></script>", "~/bundles/jquery")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-UACdLYI/ku0J5/hhojLBvchW9KNT++8VmZQW9cJDVIEth0APvgNO4qSPpIxp8F9T' crossorigin = 'anonymous' ></script>", "~/bundles/bootstrap")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-TBbVc3SDLcWU5RloNEsoiDVvRK9iYkBNMm1OsAcOIVEASb7zzMWB0aMobj6CzKUw' crossorigin = 'anonymous' ></script>", "~/bundles/angularmin")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-DuHrqGtaH5QYeMMXGpqUdPxJrDItu6TLF/CZf2ZmOe5tRa+qziwZGq6JcOhk9ROX' crossorigin = 'anonymous' ></script>", "~/bundles/angularsanitize")
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-B1miHxuCmAMGc0405Cm/zSXCc38EP5hNOy2bblqF6yiX01Svinm1mWMwJDdNDBGr' crossorigin = 'anonymous' ></script>", "~/bundles/jqueryval")
+
+
+    <script src="~/Scripts/foundation.min.js"></script>
+    <script src="~/Scripts/toolkit.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Content/fontawesome.css" rel="stylesheet" />
+    @Scripts.RenderFormat("<script src ='{0}' integrity = 'sha384-Dziy8F2VlJQLMShA6FHWNul/veM9bCkRUaLqr199K94ntO5QUrLJBEbYegdSkkqX' crossorigin = 'anonymous' ></script>", "~/bundles/JqueryUi")
+    <link href="~/Content/toolkit.css" rel="stylesheet" />
+    <link href="~/Content/UCBSR.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous" rel="stylesheet" />
+    
+</head>
+<body>
+    <header>
+
+
+        <div class="title-bar hide-for-large">
+            <button class="menu-icon" type="button" data-toggle="collapse" data-target="#menu">
+                <span class="show-for-sr">Menu</span>
+            </button>
+            <div class="title-bar-title" style="font-size:18px;margin-top:5px">menu</div>
+            <a class="title-bar-title__link" style="font-size:24px" href="@Url.Action("Index","Search")" title="Back to Homepage" aria-label="Back to Homepage">
+                UC Benefits Staff Request
+            </a>
+        </div>
+        <div class="top-bar">
+            <div class="top-bar show-for-large">
+                <a class="button -top-nav" href="@Url.Action("Index","Search")" title="Back to Homepage" aria-label="Back to Homepage">
+                    <img class="site-logo" src="~/Images/pa-keystone-large.png" alt="PA Keystone Logo">
+                    <span class="site-name desktop-only">
+                        UC Benefits Staff Request
+                    </span>
+                </a>
+                <ul class="dropdown menu" data-dropdown-menu="" role="menubar">
+                    <li class="is-submenu-item is-dropdown-sub menu-item" role="menuitem">
+                        <a href="@Url.Action("Index","Request")">Request</a>
+                    </li>
+                    @*<li class="is-submenu-item is-dropdown-sub menu-item" role="menuitem">
+                            <a href="@Url.Action("MyRequests","Home")">My Dashboard</a>
+                        </li>*@
+                    <li class="is-submenu-item is-dropdown-sub menu-item" role="menuitem">
+                        <a href="@Url.Action("Index","Search")">Search</a>
+                    </li>
+                    <li aria-haspopup="true" aria-label="One" class="is-submenu-item is-dropdown-sub menu-item" role="menuitem">
+                        <a href="@Url.Action("Index","Report")">Reports</a>
+                        @*<ul class="submenu menu vertical is-dropdown-submenu first-sub" data-submenu="" role="menubar">
+                                <li class="is-submenu-item is-dropdown-submenu-item" role="menuitem"><a href="@Url.Action("Index","Report")">Submit Request Report</a></li>
+                                <li class="is-submenu-item is-dropdown-submenu-item" role="menuitem"><a href="@Url.Action("StatusReport","Report")">Ticket Status Report</a></li>
+                                <li class="is-submenu-item is-dropdown-submenu-item" role="menuitem"><a href="@Url.Action("StatusHistoryReport","Report")">Ticket Status History Report</a></li>
+                                <li class="is-submenu-item is-dropdown-submenu-item" role="menuitem"><a href="@Url.Action("UserTicketReport","Report")">User Ticket Report</a></li>
+                            </ul>*@
+                    </li>
+                    @*<li>
+                            <a href="@Url.Action("Categories","Admin")">Categories</a>
+                        </li>*@
+                    <li class="is-submenu-item is-dropdown-sub menu-item" role="menuitem">
+                        <a href="@Url.Action("Index","Admin")">Admin</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="show-for-large" id="menu">
+                <ul class="vertical menu accordion-menu -unstyled">
+                    <li>
+                        Welcome, User!
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="collapse hide-for-large" id="menu">
+            <ul class="vertical menu accordion-menu -unstyled">
+                <li>
+                    <a href="@Url.Action("Index","Request")">Request</a>
+                </li>
+                @*<li>
+                        <a href="@Url.Action("MyRequests","Home")">My Dashboard</a>
+                    </li>*@
+                <li>
+                    <a href="@Url.Action("Index","Search")">Search</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index","Report")">Reports</a>
+                    @*<ul class="menu vertical nested">
+                            <li>
+                                <a href="@Url.Action("Index","Report")">Submit Request Report</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("StatusReport","Report")">Ticket Status Report</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("StatusHistoryReport","Report")">Ticket Status History Report</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("UserTicketReport","Report")">User Ticket Report</a>
+                            </li>
+                        </ul>*@
+                </li>
+                @*<li>
+                        <a href="@Url.Action("Categories","Admin")">Categories</a>
+                    </li>*@
+                <li>
+                    <a href="@Url.Action("Admin","Admin")">Admin</a>
+                </li>
+
+
+
+
+            </ul>
+            <ul class="vertical menu accordion-menu -unstyled">
+                <li>
+                    <span>
+                        &nbsp;&nbsp; Welcome, User!
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+
+
+    </header>
+
+
+    <div class="container body-content">
+        <br />
+        <div class="base-box">
+            @RenderBody()
+        </div>
+
+
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @RenderSection("scripts", required: false)
+    <br />
+    <footer class="main-footer">
+
+        <nav id="copyright" class="clearfix  text-center">
+            <div class="text-center">
+                Copyright © <span id="ctl00_ctl78_lblYear">@DateTime.Now.Year</span> Commonwealth of Pennsylvania. All rights reserved.
+            </div>
+
+        </nav>
+    </footer>
+</body>
+@*<body>
+        <div id="loading" style="display: flex">
+            <div class="spinner">
+            </div>
+            <p>Loading...</p>
+        </div>
+        <header>
+            <div class="title-bar hide-for-large">
+                <button class="menu-icon" type="button" id="menuToggle">
+                    <span class="show-for-sr">Menu</span>
+                </button>
+                <div class="title-bar-title" style="font-size:18px;margin-top:5px">menu</div>
+                <a class="title-bar-title__link" style="font-size:24px" href="@Url.Action("Index","Admin")" title="Back to Homepage" aria-label="Back to Homepage">
+                    UC Benefits Staff Request
+                </a>
+            </div>
+            <div class="top-bar">
+                <div class="top-bar show-for-large">
+                    <a class="button -top-nav" href="@Url.Action("Index","Admin")" title="Back to Homepage" aria-label="Back to Homepage">
+                        <img class="site-logo" src="~/Images/pa-keystone-large.png" alt="PA Keystone Logo">
+                        <span class="site-name desktop-only">
+                            UC Benefits Staff Request
+                        </span>
+                    </a>
+                    <ul class="dropdown menu" role="menubar">
+                        <li class="menu-item" role="menuitem">
+                            <a href="@Url.Action("Index","Request")">Request</a>
+                        </li>
+                        <li class="menu-item" role="menuitem">
+                            <a href="@Url.Action("Index","Search")">Search</a>
+                        </li>
+                        <li class="menu-item" role="menuitem">
+                            <a href="@Url.Action("Index","Report")">Reports</a>
+                        </li>
+                        <li class="menu-item" role="menuitem">
+                            <a href="@Url.Action("Index","Admin")">Admin</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="show-for-large" id="menu">
+                    <ul class="vertical menu">
+                        <li>
+                            Welcome, User!
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="collapse hide-for-large" id="menu">
+                <ul class="vertical menu">
+                    <li><a href="@Url.Action("Index","Request")">Request</a></li>
+                    <li><a href="@Url.Action("Index","Search")">Search</a></li>
+                    <li><a href="@Url.Action("Index","Report")">Reports</a></li>
+                    <li><a href="@Url.Action("Index","Admin")">Admin</a></li>
+                </ul>
+                <ul class="vertical menu welcome-text">
+                    <li>
+                        <span>&nbsp;&nbsp; Welcome, User!</span>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="container body-content">
+            <br />
+            <div class="base-box">
+                @RenderBody()
+            </div>
+        </div>
+
+        <div id="main-content" class="container">
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            @RenderSection("Scripts", required: false)
+        </div>
+        <footer>
+            <div class="main-footer text-center clearfix " style="background: #003146">
+
+                Copyright ©<span id="ctl00_ctl78_lblYear">@DateTime.Now.Year</span> Commonwealth of Pennsylvania. All rights reserved.
+            </div>
+        </footer>
+
+        <script>
+            $(document).ready(function () {
+
+                // Change title bar style dynamically
+                $('.title-bar-title__link').hover(
+                    function () {
+                        $(this).css({
+                            'color': '#18406E',
+                            'font-weight': 'bold'
+                        });
+                    },
+                    function () {
+                        $(this).css({
+                            'color': '',
+                            'font-weight': ''
+                        });
+                    }
+                );
+            });
+
+
+            $(document).ready(function () {
+                // Hide spinner on page load
+                $(window).on("load", function () {
+                    $('#loading').fadeOut();
+                });
+
+                // Show spinner when navigation links are clicked
+                $('a').on('click', function () {
+                    $('#loading').fadeIn();
+                });
+
+                // Handle browser Back/Forward navigation
+                $(window).on('popstate', function () {
+                    $('#loading').fadeIn();
+                    setTimeout(function () {
+                        $('#loading').fadeOut();
+                    }, 300); // Adjust delay if necessary
+                });
+                //Ensure spinner fadeout when load is happing from broswer cache
+                window.addEventListener("pageshow", function () {
+                    $('#loading').fadeOut();
+                });
+
+                // Handle "Edit Category" modal
+                $(document).on('click', '.edit-button', function (e) {
+                    e.preventDefault();
+                    $('#loading').fadeIn();
+
+                    setTimeout(function () {
+                        $('#loading').fadeOut(); // Hide spinner
+                        //$('#editCategoryModal').modal('show'); // Show modal
+                    }, 300);
+                });
+
+                // Failsafe to hide spinner after a timeout
+                setTimeout(function () {
+                    $('#loading').fadeOut();
+                }, 5000);
+            })
+
+        </script>
+    </body>*@
+</html>
