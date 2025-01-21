@@ -1,0 +1,93 @@
+﻿
+@model PA.DLI.UCStaffRequest.ViewModels.SearchViewModel
+<div class="row">
+    <div class="col-lg-9 col-md-9 col-sm-12 card-footer">
+        <b>Search Criteria: </b>
+        @if (Model.searchRequest.TicketNumber>0)
+        {
+            <span id="lbltktNum" style="font-weight: bold">Ticket Number</span>
+            <span id="spntktNum">@Model.searchRequest.TicketNumber</span>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.searchRequest.CategoryName))
+        {
+            <span id="lblcategory" style="font-weight: bold">Category</span>
+            <span id="spncategory">@Model.searchRequest.CategoryName</span>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.searchRequest.SubmittedDate))
+        {
+            <span id="lblSubDate" style="font-weight: bold">Sub Date</span>
+            <span id="spnSubDate">@Model.searchRequest.SubmittedDate</span>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.searchRequest.CwopaId))
+        {
+            <span id="lblUser" style="font-weight: bold">User</span>
+            <span id="spnUser">@Model.searchRequest.CwopaId</span>
+        }
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-12 card-footer">
+        <b id="totalCount" style="float:right">Search Count: @Model.TotalResults </b>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="hover">
+        <thead>
+            <tr>
+                <th>Ticket Id</th>
+                <th>Category</th>
+                <th>From Email</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="tbodyid">
+            @if (Model != null && Model.Results.Any())
+            {
+                foreach (var result in Model.Results)
+                {
+                    <tr>
+                        <td style="text-align:center">
+                            <a href="#" data-toggle="modal" id="@result.TicketId"><b>@result.TicketId</b></a>
+                        </td>
+                        <td>@result.Category</td>
+                        <td>@result.FromEmail</td>
+                        <td>@result.SubmissionDate</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="text-center">No Record(s) Found</td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</div>
+<div class="row justify-content-center" style="height:55px">
+    <div aria-label="pagination">
+        <div class="pagination text-center" style="height:45px;">
+            @if (Model.CurrentPage > 1)
+            {
+                var page = Model.CurrentPage - 1;
+                <a href="@Url.Action("Search", "Search", new { page = Model.CurrentPage - 1 })" class="button -pagination" style="height:45px;" data-page="@page">Prev</a>}
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+                    <span class="current">@i</span> }
+                else
+                {
+                    <a href="@Url.Action("Search", "Search", new { page = i })" data-page="@i">@i</a>}
+            }
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                var page = Model.CurrentPage + 1;
+                <a href="@Url.Action("Search", "Search", new { page = Model.CurrentPage + 1 })" class="button -pagination" style="height:45px;" data-page="page">Next</a>}
+        </div>
+    </div>
+</div>

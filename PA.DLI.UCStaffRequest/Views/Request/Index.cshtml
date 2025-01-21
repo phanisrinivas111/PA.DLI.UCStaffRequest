@@ -56,7 +56,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <fieldset class="form-group" style="margin:0px; ">
-                    <label for="ddlCategory" style="padding:7.75px 0px">Category</label>
+                    <label for="ddlCategory" style="padding:7.75px 0px" class="mandatory">Category</label>
                     <select id="ddlCategory" style="max-width:100%" name="Category" required>
                         <option value="" disabled selected>Select</option>
                     </select>
@@ -160,9 +160,10 @@
 
             $("#btnSubmit").click(function () {
                 // Create a FormData object
+                clearErrors();
                 var formData = new FormData();
                 formData.append("Category", $("#ddlCategory").val());
-                formData.append("FromEmail", $("#email").val());
+                formData.append("FromEmail", "test@test.com");
                 formData.append("CC", $("#cc").val());
                 formData.append("Subject", $("#subject").val());
                 formData.append("Message", $("#message").val());
@@ -179,8 +180,10 @@
                     processData: false,
                     success: function (response) {
                         if (response.success) {
-                            location.reload();
+                            window.location.href = '/Request/Confirmation';
                         } else {
+                            const errorMessageDiv = $('#errorMessage');
+                            const errorList = $('#errorList');
                             // Display error message for unsuccessful addition
                             errorList.empty();
                             if (response.message && response.message.length > 0) {
@@ -201,13 +204,14 @@
             $("#btnCancel").click(function () {
                 $('#ticketNumber').val('');
                 $('#ddlCategory').val('');
-                $('#email').val('');
                 $('#cc').val('');
                 $('#subject').val('');
                 $('#message').val('');
                 filesArray = [];
                 fileTableBody.innerHTML = '';
                 fileUpload.value = "";
+                clearErrors();
+                window.location.href = '/Search';
             });
         });
 
@@ -215,12 +219,33 @@
             const files = Array.from(this.files);
 
             files.forEach(file => {
+                const errorMessageDiv = $('#errorMessage');
+                const errorList = $('#errorList');
                 if (file) {
+
                     if (file.name.endsWith('.zip')) {
-                        alert('ZIP files are not allowed.');
+                        // Display error message for unsuccessful addition
+                        errorList.empty();
+                        $('#errorList').append(`<li id="m-1">Please upload a valid file format (e.g., .pdf, .docx).</li>`);
+                        errorMessageDiv.removeClass('d-none');
                         return;
                     }
+                   
+                    // Check if the file already exists in the array
+                    const fileExists = filesArray.some(existingFile => existingFile.name === file.name && existingFile.size === file.size);
 
+                    if (fileExists) {
+                        errorList.empty();
+                        errorList.append(`<li id="m-2">This file has already been uploaded.</li>`);
+                        errorMessageDiv.removeClass('d-none');
+                        return;
+                    }
+                    // Check for file size limit (20 MB = 20 * 1024 * 1024 bytes)
+                    if (file.size > 20 * 1024 * 1024) {
+                        errorList.append(`<li id="m-3">Max size of attachments cannot exceed 20MB</li>`);
+                        errorMessageDiv.removeClass('d-none');
+                        return;
+                    }
                     // Add file to array and update table
                     filesArray.push(file);
                     updateFileTable();

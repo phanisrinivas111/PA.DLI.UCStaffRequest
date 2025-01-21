@@ -1,0 +1,214 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<html>
+<head>
+    <script>
+    </script>
+</head>
+<body>
+    <div id="errorMessage" class="callout alert d-none" role="alert">
+        <b>Please correct following error(s) to proceed</b>
+        <ul style="list-style-position:inside" id="errorList">
+            <il>
+            </il>
+        </ul>
+
+    </div>
+    <div class="container">
+        <br />
+        <h4 style="color:#18406E">UC Benefits Staff Request Search</h4><br />
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label for="ticketNumber" class="font-weight-bold">Ticket Number</label>
+                <input type="text" class="form-control" id="ticketNumber" maxlength="25">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label for="user" class="font-weight-bold">CWOPA ID</label>
+                <div class="input-group">
+                    <input date-picker class="form-control" id="user" name="user" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <fieldset>
+                    <label for="ddlCategory"class="mandatory">Category</label>
+                    <select id="ddlCategory" style="max-width:100%" name="Category" required>
+                        <option value="" disabled selected>Select</option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label for="txtSubDate" class="font-weight-bold">Submitted Date (mm/dd/yyyy)</label>
+                <div class="input-group">
+                    <input date-picker class="form-control" id="txtSubDate" name="txtSubDate" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                <button class="btn button -secondary btn-block" value="Reset" id="btnreset">Reset</button>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-12 offset-lg-8 offset-md-4 form-group pull-right">
+                <button class="btn button -primary btn-block" value="HjckIDSearch" id="btnSearch">Search</button>
+            </div>
+        </div>
+
+        <div id="results">
+
+        </div>
+    </div>
+</body>
+</html>
+@section Scripts {
+    <script>
+        var ticketNumber;
+        var user;
+        var category;
+        var categoryName;
+        var submittedDate;
+        var page = 1;;
+        $(document).ready(function () {
+            $("#btnreset").click(function () {
+                $("#ticketNumber").val(""),
+                    $("#user").val(""),
+                    $("#ddlCategory").val(""),
+                    $("#txtSubDate").val("")
+                clearErrors();
+            });
+            $("#btnSearch").click(function () {
+                debugger;
+                if (validateRequest()) {
+                    ticketNumber = $("#ticketNumber").val();
+                    user = $("#user").val();
+                    category = $("#ddlCategory").val();
+                    categoryName = $("#ddlCategory option:selected").text();
+                    submittedDate = $("#txtSubDate").val();             
+                    search();
+                }
+                return;
+            });
+            $(document).on("click", ".pagination a", function (e) {
+                e.preventDefault(); // Prevent the default link behavior
+                debugger;
+                 page = parseInt($(this).data("page"), 10);
+                search();
+            });
+        });
+        function search() {
+            var data = {
+                TicketNumber: ticketNumber,
+                User: user,
+                Category: category,
+                CategoryName: categoryName,
+                SubmittedDate: submittedDate,
+                Page: page
+            }
+
+            $.ajax({
+                url: '/Search/Search',
+                type: 'GET',
+                data: data,
+                success: function (response) {
+                    debugger;
+                    $("#results").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', xhr.responseText || error);
+                    alert('Failed to fetch List');
+                }
+            });
+        }
+        function validateRequest() {
+            // Clear previous error messages
+            const errorMessageDiv = $('#errorMessage');
+            const errorList = $('#errorList');
+
+            errorList.empty();
+            errorMessageDiv.addClass('d-none'); // Hide the error div initially
+            const errors = [];
+            var searchFields = [
+                $("#ticketNumber").val().trim(),
+                $("#user").val().trim(),
+                $("#ddlCategory").val(),
+                $("#txtSubDate").val().trim()
+            ];
+
+            // Check if at least one field is filled or valid
+            var isSearchCriteriaSelected = searchFields.some(function (field, index) {
+                // Check if Ticket Number or CWOPA ID is not empty
+                if (index === 0 || index === 1) {
+                    return field !== "";
+                }
+                // Check if Category is selected
+                if (index === 2) {
+                    return field !== null;
+                }
+                // Check if Submitted Date is valid
+                if (index === 3) {
+                    var datePattern = /^\d{2}\/\d{2}\/\d{4}$/; // MM/DD/YYYY format
+                    return field !== "" && datePattern.test(field);
+                }
+                return false;
+            });
+
+            // If no search criteria is selected, show error message
+            if (!isSearchCriteriaSelected) {
+                $('#errorList').append(`<li id="m-1">Please select at least one search criterion to perform the search.</li>`);
+                errorMessageDiv.removeClass('d-none');
+                return false;
+            }
+            return true;
+        }
+        function GetCategories() {
+            $.ajax({
+                url: '/Admin/GetCategoriesList', // Endpoint to get roles
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        //console.log('roles when sucess-------------', response.data);
+                        // Empty the existing dropdown options
+                        var categoryDropdown = $('#ddlCategory');
+                        categoryDropdown.empty();
+                        // Add the default "Select" option
+                        categoryDropdown.append('<option value="" disabled selected>Select</option>');
+                        // Populate the dropdown with the roles from the server
+                        response.data.forEach(function (role) {
+                            categoryDropdown.append(
+                                $('<option></option>')
+                                    .val(role.value)
+                                    .text(role.text)
+                            );
+                        });
+                    } else {
+                        console.error('Error fetching categories:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.message);
+                    console.log("error in categories", error.message);
+                    console.error('Error:', error);
+                    alert('Failed to fetch categories');
+                }
+            });
+
+        }
+        function clearErrors() {
+            // Clear previous error messages
+            const errorMessageDiv = $('#errorMessage');
+            const errorList = $('#errorList');
+
+            errorList.empty();
+            errorMessageDiv.addClass('d-none'); // Hide the error div initially
+            const errors = [];
+        }
+
+    </script>
+}
+
+

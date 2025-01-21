@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <script>
+        //var app = angular.module('reportApp', []);
+        //app.controller('reportController', function ($scope) {
+        //    $scope.ShowSearchCriteria = false;
+        //    $scope.Resetform = function () {
+        //        $scope.ShowSearchCriteria = false;
+        //        $scope.FROM_DTE = null;
+        //        $scope.TO_DTE = null;
+        //        $scope.Report_Type = null;
+        //    }
+        //});
+    </script>
+</head>
+<body ng-controller="reportController">
+    <div class="container">
+        <h5>Submit Request Report</h5>
+        <br />
+        <div class="col-lg-12 col-md-12 col-sm-12 row">
+            <fieldset class="col-lg-4 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label class="font-weight-bold" for="FROM_DTE">From Date(mm/dd/yyyy)*</label>
+                <div class="input-group"><input type="text" class="form-control" name="FROM_DTE" id="FROM_DTE" ng-model="FROM_DTE" date-picker></div>
+            </fieldset>
+            <fieldset class="col-lg-4 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label class="font-weight-bold" for="TO_DTE">To Date(mm/dd/yyyy)*</label>
+                <div class="input-group"><input type="text" class="form-control" name="TO_DTE" id="TO_DTE" ng-model="TO_DTE" date-picker></div>
+            </fieldset>
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 form-group">
+                <label class="font-weight-bold" for="RPT_TYPE">Report Type*</label>
+                <div class="input-group">
+                    <select style="line-height:19px" id="RPT_TYPE" name="RPT_TYPE" ng-model="Report_Type">
+                        <option value=""></option>
+                        <option value="1">Summary</option>
+                        <option value="2">Detail</option>
+                    </select>
+                </div>
+            </div>
+            @*<div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 form-group">
+                    <label class="font-weight-bold" for="EXPT_TYPE">Export Type*</label>
+                    <div class="input-group">
+                        <select style="line-height:19px" id="EXPT_TYPE" name="EXPT_TYPE" ng-model="EXPT_TYPE">
+                            <option value=""></option>
+                            <option value="PDF">PDF</option>
+                            <option value="EXCELOPENXML">EXCEL</option>
+                        </select>
+                    </div>
+                </div>*@
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 row">
+            <div class="col-lg-2 col-md-4 col-sm-12 form-group">
+                <button type="button" value="Reset" class="btn button -secondary btn-block" ng-click="Resetform();">Reset</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-12 offset-md-8 offset-md-4 form-group pull-right">
+                <button type="button" value="Submit" id="Submit" name="Submit" class="btn button -primary btn-block" ng-click="GenerateSubmitTicketReport()">Generate</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
+

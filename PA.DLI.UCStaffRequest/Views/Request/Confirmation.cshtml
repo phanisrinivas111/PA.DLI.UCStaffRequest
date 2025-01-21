@@ -1,7 +1,24 @@
 ﻿
 @{
     ViewBag.Title = "Confirmation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Confirmation</h2>
+<div class="callout success " id="successMessage" data-closable role="alert">
+    <h3><i class="fa-regular fa-circle-check"></i>Inquiry form has been successfully submitted.</h3>
+</div>
+<div class="row">
+    <div class="col-lg-2 col-md-4 col-sm-12 offset-lg-8 offset-md-4 form-group pull-right">
+        <button class="btn button -primary btn-block" value="HjckIDSearch" id="btnok">Ok</button>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#btnok').click(function () {
+                window.location.href = '/search';  // Redirect to the search controller
+            });
+        });
+    </script>
+}
 
