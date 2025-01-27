@@ -84,7 +84,7 @@ namespace PA.DLI.UCStaffRequest.DataAccess.DataAccess
                 {
                     ParameterName = "@FileDetails",
                     SqlDbType = SqlDbType.Structured,
-                    TypeName = "dbo.FileDetailsType", // TVP name
+                    TypeName = "dbo.FileDetailType", // TVP name
                     Value = fileTable
                 }
             };
@@ -94,7 +94,7 @@ namespace PA.DLI.UCStaffRequest.DataAccess.DataAccess
                         {
                             command.Transaction = transaction;
                             command.CommandType = CommandType.StoredProcedure;
-                            command.CommandText = "USP_INSERT_INQUERY";
+                            command.CommandText = "USP_INSERT_INQUIRY";
 
                             // Add parameters to the command
                             command.Parameters.AddRange(parameters.ToArray());
@@ -110,7 +110,7 @@ namespace PA.DLI.UCStaffRequest.DataAccess.DataAccess
                     {
                         // Rollback the transaction in case of error
                         transaction.Rollback();
-                        throw;
+                        throw ex;
                     }
                 }
             }
@@ -156,7 +156,7 @@ namespace PA.DLI.UCStaffRequest.DataAccess.DataAccess
                             {
                                 inquiry.TicketId = Convert.ToInt32(row["IDN_TICKET"]);
                             }
-                            response. Add(inquiry);
+                            response.Add(inquiry);
                         }
                     }
 

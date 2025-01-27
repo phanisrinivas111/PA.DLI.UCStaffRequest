@@ -1,24 +1,23 @@
-﻿
-@{
-    ViewBag.Title = "Confirmation";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<div class="callout success " id="successMessage" data-closable role="alert">
-    <h3><i class="fa-regular fa-circle-check"></i>Inquiry form has been successfully submitted.</h3>
-</div>
-<div class="row">
-    <div class="col-lg-2 col-md-4 col-sm-12 offset-lg-8 offset-md-4 form-group pull-right">
-        <button class="btn button -primary btn-block" value="HjckIDSearch" id="btnok">Ok</button>
+﻿@{ ViewBag.Title = "Confirmation";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+<div class="col-12 form-group">
+    <div class="callout success" role="alert">
+        <p class="msg text-white">
+            <b><i class="fa fa-check-circle" aria-hidden="true" text-align="left"></i> Your request has been submitted successfully.</b>
+        </p>
     </div>
 </div>
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#btnok').click(function () {
-                window.location.href = '/search';  // Redirect to the search controller
-            });
-        });
-    </script>
-}
 
+<div class="col-lg-12 col-md-12 col-sm-12 row d-flex justify-content-end">
+    <button class="btn button -primary btn-block pull-right" style="margin: 0;" value="HjckIDSearch" id="btnok">Ok</button>
+</div>
+
+         
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    $('#btnok').click(function () {
+                        window.location.href = '/search';  // Redirect to the search controller
+                    });
+                });</script>
+        }

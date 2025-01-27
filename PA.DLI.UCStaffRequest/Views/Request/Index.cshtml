@@ -68,7 +68,7 @@
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
                 <label for="email" class="mandatory">From Email</label>
-                <input type="email" class="form-control" alphabetcomma id="email" maxlength="25" required readonly>
+                <input type="email" class="form-control" alphabetcomma id="email" maxlength="50" value="c-cnayudu@pa.gov" required readonly>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 form-group">
                 <label for="cc" class="font-weight-bold">CC</label>
@@ -79,7 +79,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 form-group">
                 <label for="subject" class="mandatory">Subject</label>
-                <input type="text" class="form-control" alphabetcomma id="subject" required>
+                <input type="text" class="form-control" alphabetcomma id="subject" maxlength="100" required>
             </div>
         </div>
         <div class="row">
@@ -163,7 +163,7 @@
                 clearErrors();
                 var formData = new FormData();
                 formData.append("Category", $("#ddlCategory").val());
-                formData.append("FromEmail", "test@test.com");
+                formData.append("FromEmail", $("#email").val() );
                 formData.append("CC", $("#cc").val());
                 formData.append("Subject", $("#subject").val());
                 formData.append("Message", $("#message").val());
@@ -214,63 +214,80 @@
                 window.location.href = '/Search';
             });
         });
-
         fileUpload.addEventListener('change', function () {
             const files = Array.from(this.files);
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf', 'txt', 'docx', 'xlsx']; // Allowed file formats
+            const errorMessageDiv = $('#errorMessage');
+            const errorList = $('#errorList');
+            let totalFileSize = filesArray.reduce((total, file) => total + file.size, 0); // Calculate current total size of filesArray
 
             files.forEach(file => {
-                const errorMessageDiv = $('#errorMessage');
-                const errorList = $('#errorList');
                 if (file) {
+                    errorList.empty(); // Clear error messages for every file check
 
-                    if (file.name.endsWith('.zip')) {
-                        // Display error message for unsuccessful addition
-                        errorList.empty();
-                        $('#errorList').append(`<li id="m-1">Please upload a valid file format (e.g., .pdf, .docx).</li>`);
+                    // Extract the file extension
+                    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+                    // Check for disallowed file formats
+                    if (!allowedExtensions.includes(fileExtension)) {
+                        errorList.append('<li id="m-1">Invalid file format. Allowed formats: ' + allowedExtensions.join(', ') + '.</li>');
                         errorMessageDiv.removeClass('d-none');
                         return;
                     }
-                   
+
                     // Check if the file already exists in the array
                     const fileExists = filesArray.some(existingFile => existingFile.name === file.name && existingFile.size === file.size);
-
                     if (fileExists) {
-                        errorList.empty();
-                        errorList.append(`<li id="m-2">This file has already been uploaded.</li>`);
+                        errorList.append('<li id="m-2">This file has already been uploaded.</li>');
                         errorMessageDiv.removeClass('d-none');
                         return;
                     }
-                    // Check for file size limit (20 MB = 20 * 1024 * 1024 bytes)
+
+                    // Check individual file size limit (20 MB = 20 * 1024 * 1024 bytes)
                     if (file.size > 20 * 1024 * 1024) {
-                        errorList.append(`<li id="m-3">Max size of attachments cannot exceed 20MB</li>`);
+                        errorList.append('<li id="m-3">Max size of attachments cannot exceed 20MB per file.</li>');
                         errorMessageDiv.removeClass('d-none');
                         return;
                     }
-                    // Add file to array and update table
+
+                    // Check total size limit (20 MB = 20 * 1024 * 1024 bytes)
+                    if (totalFileSize + file.size > 20 * 1024 * 1024) {
+                        errorList.append('<li id="m-4">Total size of all attachments cannot exceed 20MB.</li>');
+                        errorMessageDiv.removeClass('d-none');
+                        return;
+                    }
+
+                    // Add file to array and update total size
                     filesArray.push(file);
+                    totalFileSize += file.size;
+
+                    // Update file table
                     updateFileTable();
 
                     // Show the file list grid when a file is uploaded
                     fileList.style.display = 'block';
-                    this.value = ''; // Clear file input
+
+                    // Clear file input to allow re-uploading
+                    this.value = '';
                 }
             });
         });
+
 
         function updateFileTable() {
             fileTableBody.innerHTML = '';
             filesArray.forEach((file, index) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td style="padding: 4px; font-size: 16px;">
-                        ${file.name}
-                    </td>
-                    <td class="file-actions" style="padding: 4px;">
-                        <a href="javascript:void(0)" onclick="removeFile(${index})" style="font-size: 16px; color: navy; cursor: pointer; text-decoration: none;">
-                            Remove <i class="fa fa-trash" aria-hidden="true"></i>
-                        </a>
-                    </td>
-                `;
+                        <td style="padding: 4px; font-size: 16px;">
+                            ${file.name}
+                        </td>
+                        <td class="file-actions" style="padding: 4px;">
+                            <a href="javascript:void(0)" onclick="removeFile(${index})" style="font-size: 16px; color: navy; cursor: pointer; text-decoration: none;">
+                                Remove <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    `;
                 fileTableBody.appendChild(row);
             });
         }
@@ -328,6 +345,6 @@
             errorMessageDiv.addClass('d-none'); // Hide the error div initially
             const errors = [];
         }
-    
+
     </script>
 }

@@ -15,33 +15,55 @@ namespace PA.DLI.UCStaffRequest.Controllers
         
         private IEnumerable<PA.DLI.UCStaffRequest.Models.User> MapModelUsers(IEnumerable<PA.DLI.UCStaffRequest.DataAccess.DataObjects.User> dataUserObject)
         {
-            return dataUserObject.Select(u => new Models.User
+            try {
+                return dataUserObject.Select(u => new Models.User
+                {
+                    UserId = u.UserId,
+                    RoleCode = u.RoleCode,
+                    LastChangeDate = u.LastChangeDate,
+                    LastChangeUser = u.LastChangeUser,
+                    IsDeleted = u.IsDeleted
+                }).ToList();
+            }
+            catch (Exception ex)
             {
-                UserId = u.UserId,
-                RoleCode = u.RoleCode,
-                LastChangeDate = u.LastChangeDate,
-                LastChangeUser = u.LastChangeUser,
-                IsDeleted = u.IsDeleted
-            }).ToList();
+                ErrorLogging.LogWritter("Admin", "MapModelUsers", ex.Message, "Error while mapping users");
+                throw;
+            }
         }
         private IEnumerable<PA.DLI.UCStaffRequest.Models.Category> MapModeCategory(IEnumerable<PA.DLI.UCStaffRequest.DataAccess.DataObjects.Category> dataCategoryObject)
         {
-            return dataCategoryObject.Select(u => new Models.Category
+            try{
+                return dataCategoryObject.Select(u => new Models.Category
+                {
+                    CategoryName = u.CategoryName,
+                    Email = u.Email,
+                    LastChangedDate = u.LastChangedDate,
+                    LastChangedUser = u.LastChangedUser,
+                    IsDeleted = u.IsDeleted
+                }).ToList();
+            }
+            catch (Exception ex)
             {
-                CategoryName = u.CategoryName,
-                Email = u.Email,
-                LastChangedDate = u.LastChangedDate,
-                LastChangedUser = u.LastChangedUser,
-                IsDeleted = u.IsDeleted
-            }).ToList();
+                ErrorLogging.LogWritter("Admin", "MapModeCategory", ex.Message, "Error while mapping categories");
+                throw ex;
+            }
         }
         private IEnumerable<PA.DLI.UCStaffRequest.Models.Role> MapModeRoles(IEnumerable<PA.DLI.UCStaffRequest.DataAccess.DataObjects.Role> dataRoleObject)
         {
-            return dataRoleObject.Select(u => new Models.Role
+            try
             {
-                CDE_ROLE = u.CDE_ROLE,
-                TXT_ROLE = u.TXT_ROLE,
-            }).ToList();
+                return dataRoleObject.Select(u => new Models.Role
+                {
+                    CDE_ROLE = u.CDE_ROLE,
+                    TXT_ROLE = u.TXT_ROLE,
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogging.LogWritter("Admin", "MapModeRoles", ex.Message, "Error while mapping roles");
+                throw ex;
+            }
         }
         public AdminController()
         {
@@ -50,17 +72,32 @@ namespace PA.DLI.UCStaffRequest.Controllers
         [HttpGet]
         public ActionResult Categories()
         {
-            var categories = _dataAccess.GetCategories();
-            var modelCategory = MapModeCategory(categories);
-            return View(modelCategory);
+            try
+            {
+                var categories = _dataAccess.GetCategories();
+                var modelCategory = MapModeCategory(categories);
+                return View(modelCategory);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogging.LogWritter("Admin", "Categories", ex.Message, "Error while fetching categories");
+                return View("Error"); // Render a generic error view
+            }
         }
 
         // GET: Admin
         [HttpGet]
         public ActionResult Index()
         {
+            try { 
             ViewBag.Title = "Home";
             return View();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogging.LogWritter("Admin", "Index", ex.Message, "Error in Index view");
+                return View("Error");
+            }
         }
         [HttpPost]
         public JsonResult AddCategory(string CategoryName, string Email)
@@ -127,7 +164,7 @@ namespace PA.DLI.UCStaffRequest.Controllers
             }
             catch (Exception EX)
             {
-                //
+                
                 ErrorLogging.LogWritter("Admin", "AddCategory", EX.Message, "Details: " + str);
                 return Json(new { success = false, message = EX.Message });
             }

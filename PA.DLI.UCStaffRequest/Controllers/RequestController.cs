@@ -1,14 +1,13 @@
-﻿using Newtonsoft.Json;
-using PA.DLI.UCStaffRequest.Common.Util;
-using PA.DLI.UCStaffRequest.DataAccess.DataAccess;
+﻿using PA.DLI.UCStaffRequest.DataAccess.DataAccess;
 using PA.DLI.UCStaffRequest.DataAccess.DataObjects;
 using PA.DLI.UCStaffRequest.Helper;
 using PA.DLI.UCStaffRequest.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Helpers;
 using System.Web.Mvc;
+using PA.DLI.UCStaffRequest.Common.Util;
+using Newtonsoft.Json;
 
 namespace PA.DLI.UCStaffRequest.Controllers
 {
@@ -21,13 +20,31 @@ namespace PA.DLI.UCStaffRequest.Controllers
             _dataAccess = new InquiryDataAccess();
         }
         // GET: Request
+        [HttpGet]
         public ActionResult Index()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogging.LogWritter("Request", "Index", ex.Message, "Error in the request view");
+                return View("Error"); // Redirect to a generic error view.
+            }
         }
+        [HttpGet]
         public ActionResult Confirmation()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogging.LogWritter("Request", "Confirmation", ex.Message, "Error in the confirmation view");
+                return View("Error"); // Redirect to a generic error view.
+            }
         }
 
         [HttpPost]
@@ -40,7 +57,7 @@ namespace PA.DLI.UCStaffRequest.Controllers
                 {
                     if (!string.IsNullOrEmpty(model.FromEmail))
                     {
-                        if (model.FromEmail.EndsWith("@pa.gov", StringComparison.CurrentCultureIgnoreCase))
+                        if (!model.FromEmail.EndsWith("@pa.gov", StringComparison.CurrentCultureIgnoreCase))
                         {
                             errors.Add("From Email must be in the format of @pa.gov");
                         }
@@ -48,14 +65,32 @@ namespace PA.DLI.UCStaffRequest.Controllers
                     }
                     if (!string.IsNullOrEmpty(model.CC))
                     {
+
                         var invalidEmails = model.CC
-                      .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries) // Split by semicolon
-                      .Select(email => email.Trim()) // Trim whitespace from each email
-                      .Where(email => !email.EndsWith("@pa.Gov", StringComparison.CurrentCultureIgnoreCase)) // Filter invalid emails
-                      .ToList();
+                         .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) // Split by semicolon
+                         .Select(email => email.Trim()) // Trim whitespace from each email
+                         .Where(email =>
+                             !email.EndsWith("@pa.Gov", StringComparison.OrdinalIgnoreCase) || // Check domain
+                             !IsValidEmailFormat(email)) // Check email format
+                         .ToList();
+
                         if (invalidEmails.Any())
                         {
-                            errors.Add("CC Email must be in the format of @pa.gov");
+                            errors.Add("CC Email must be in the format of @pa.gov and cannot contain special characters or duplicates.");
+                        }
+                        var duplicateEmails = model.CC
+                         .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries) // Split by semicolon
+                         .Select(email => email.Trim()) // Trim whitespace from each email
+                         .GroupBy(email => email, StringComparer.OrdinalIgnoreCase) // Group by email (case-insensitive)
+                         .Where(group => group.Count() > 1) // Filter groups with more than one email
+                         .ToDictionary(group => group.Key, group => group.Count()); // Create a dictionary of email and count
+
+                        if (duplicateEmails.Any())
+                        {
+                            foreach (var duplicate in duplicateEmails)
+                            {
+                                errors.Add($"CC Email: {duplicate.Key}, Count: {duplicate.Value}");
+                            }
                         }
 
                     }
@@ -66,14 +101,7 @@ namespace PA.DLI.UCStaffRequest.Controllers
                     }
                     else
                     {
-                        EmailHelper.SendEmail(
-                  fromEmail: model.FromEmail,
-                  toEmail: model.CC,
-                  cc: model.CC,
-                  subject: model.Subject,
-                  body: model.Message,
-                  attachments: model.files
-              );
+
                         model.LastChangeUser = "Chetana";
                         _dataAccess.AddInquiry(MapToInquiry(model));
                         return Json(new { success = true, message = "SuccessFully Created" });
@@ -86,6 +114,7 @@ namespace PA.DLI.UCStaffRequest.Controllers
                     {
                         errors.Add("Category is required.");
                     }
+
                     if (string.IsNullOrEmpty(model.Subject))
                     {
                         errors.Add("Subject is required.");
@@ -104,25 +133,49 @@ namespace PA.DLI.UCStaffRequest.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
+        [HttpPost]
+        bool IsValidEmailFormat(string email)
+        {
+            string str = "Email:" + email;
+            // Regular expression to check for special characters in the email
+            try
+            {
+                var specialCharPattern = @"[^a-zA-Z0-9@._-]";
+                return !System.Text.RegularExpressions.Regex.IsMatch(email, specialCharPattern);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogging.LogWritter("Request", "IsValidEmailFormat", ex.Message, "Details: " + str);
+                throw ex;
+            }
+        }
+        [HttpPost]
         private Inquiry MapToInquiry(RequestViewModel viewModel)
         {
-            if (viewModel == null)
+            try
             {
-                throw new ArgumentNullException(nameof(viewModel), "The RequestViewModel cannot be null.");
-            }
+                if (viewModel == null)
+                {
+                    throw new ArgumentNullException(nameof(viewModel), "The RequestViewModel cannot be null.");
+                }
 
-            return new Inquiry
+                return new Inquiry
+                {
+                    Category = viewModel.Category,
+                    FromEmail = viewModel.FromEmail,
+                    CC = viewModel.CC,
+                    Subject = viewModel.Subject,
+                    Message = viewModel.Message,
+                    LastChangeDate = DateTime.Now, // Set to the current time or customize as needed
+                    LastChangeUser = viewModel.LastChangeUser,
+                    files = viewModel.files
+                };
+            }
+            catch (Exception ex)
             {
-                Category = viewModel.Category,
-                FromEmail = viewModel.FromEmail,
-                CC = viewModel.CC,
-                Subject = viewModel.Subject,
-                Message = viewModel.Message,
-                LastChangeDate = DateTime.Now, // Set to the current time or customize as needed
-                LastChangeUser = viewModel.LastChangeUser,
-                files = viewModel.files
-            };
+                ErrorLogging.LogWritter("Request", "MapToInquiry", ex.Message, "Details: " + JsonConvert.SerializeObject(viewModel));
+                throw ex;
+            }
         }
     }
 

@@ -189,7 +189,8 @@
             function resetModel() {
                 $("#addUserForm").find("input,select,textarea").val("");
                 $("#Role").val("");
-                $('#customModal').fadeOut();
+                //$('#customModal').fadeOut();
+                $('#customModal').css('display', 'none');
                 $("#adduserErrorMessage").addClass('d-none');
                 $("#errorList").empty();
             }
@@ -227,8 +228,7 @@
 
 
             $('#openCustomModal').click(function () {
-
-                $('#customModal').fadeIn();
+                $('#customModal').css('display', 'block');
             });
 
             $('#cancleButton, #custommodalclose').click(function () {
@@ -262,7 +262,8 @@
                             localStorage.setItem('successMessage', `User ${cwopaId} added sucessfully`)
                             location.reload();
                             // Close the modal
-                            $('#customModal').fadeOut();
+                            //$('#customModal').fadeOut();
+                            $('#customModal').css('display', 'none');
                             resetModel();
 
 
@@ -292,13 +293,14 @@
 
                 // Update the confirmation message
                 $('#deleteMessage').text(`Are you sure you want to delete User  ${userIdToDelete} ?`);
-
+                $('#deleteUserModal').css('display', 'block');
                 // Show the delete modal
-                $('#deleteUserModal').fadeIn();
+                //$('#deleteUserModal').fadeIn();
             });
             // Close Modal when clicking No button
             $('#cancleDelete, #custommodalclose').click(function () {
-                $('#deleteUserModal').fadeOut(); // Close the modal
+                //$('#deleteUserModal').fadeOut(); // Close the modal
+                $('#deleteUserModal').css('display', 'none');
             });
             // Confirm Delete
             $('#confirmDelete').click(function () {
@@ -326,7 +328,8 @@
                     });
 
                     // Hide the modal
-                    $('#deleteUserModal').fadeOut();
+                    $('#deleteUserModal').css('display', 'none');
+                    //$('#deleteUserModal').fadeOut();
                 }
             });
         });
